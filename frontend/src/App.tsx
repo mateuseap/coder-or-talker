@@ -27,7 +27,7 @@ function App() {
       setInit(true);
     });
 
-    if (!toastShow && window.location && window.location.pathname === "/") {
+    if (!toastShow && window.location && window.location.pathname === "/coder-or-talker/") {
       showInfoToast(
         "Great news! We're cooking up more features (like support for X) to make this app even better. Stay tuned! 🚀",
         6000
