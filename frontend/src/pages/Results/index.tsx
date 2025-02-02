@@ -1,16 +1,19 @@
 import type { GitHubVsBlueskyCardProps } from "../../types";
 import { useLocation, useNavigate } from "react-router-dom";
 import DefaultPage from "../../components/DefaultPage";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { FaGithub } from "react-icons/fa";
 import { SiBluesky } from "react-icons/si";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
+import { toPng } from "html-to-image";
+import { formatImageUrl } from "../../utils";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function Results() {
   const navigate = useNavigate();
+  const elementRef = useRef(null);
   const location = useLocation();
   const data = location.state as GitHubVsBlueskyCardProps | undefined;
 
@@ -83,14 +86,50 @@ export default function Results() {
     }
   }, [data.githubCommitsCount, data.blueskyPostsCount, data.name]);
 
+  const htmlToImageConvert = () => {
+    if (elementRef.current) {
+      toPng(elementRef.current, { cacheBust: false })
+        .then((dataUrl) => {
+          const link = document.createElement("a");
+          link.download = "coder-or-talker.png";
+          link.href = dataUrl;
+          link.click();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
   return (
     <DefaultPage>
       <div className="flex flex-col w-full h-full justify-center items-center px-8">
-        <div className="bg-white rounded-lg shadow max-w-4xl w-full p-8 space-y-6 md:space-y-0 md:flex md:gap-8">
+        <div
+          className="relative bg-white rounded-lg shadow max-w-4xl w-full p-8 space-y-6 md:space-y-0 md:flex md:gap-8"
+          ref={elementRef}
+        >
+          <div className="absolute top-2 right-2 flex gap-2">
+            <a
+              className="text-xs font-semibold hover:underline text-[#3498DB] hover:text-blue-700"
+              href={`https://bsky.app/intent/compose?text=${encodeURIComponent(
+                shareMessage + " " + "https://mateuseap.com/coder-or-talker"
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Share on Bluesky
+            </a>
+            <button
+              onClick={htmlToImageConvert}
+              className="text-xs font-semibold hover:underline text-[#3498DB] hover:text-blue-700 focus:outline-none"
+            >
+              Download
+            </button>
+          </div>
           <div className="flex flex-col flex-1 space-y-6">
             <div className="flex flex-col items-center">
               <img
-                src={data.avatar}
+                src={formatImageUrl(data.avatar)}
                 alt={data.name}
                 className="w-32 h-32 rounded-full mb-4 shadow-md"
               />
@@ -153,7 +192,7 @@ export default function Results() {
                 <Pie data={chartData} />
               </div>
             )}
-            <p className="text-center text-sm text-gray-700 text-bold">
+            <p className="text-center text-sm text-gray-700 font-semibold">
               {shareMessage}
             </p>
           </div>

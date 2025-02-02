@@ -39,7 +39,11 @@ export function chooseIconSize(size: Sizes | string): string {
   }
 }
 
-export const showSuccessToast = (message: string, autoclose?: number, position?: ToastPosition) => {
+export const showSuccessToast = (
+  message: string,
+  autoclose?: number,
+  position?: ToastPosition
+) => {
   toast.success(message, {
     position: `${position ? position : "bottom-center"}`,
     autoClose: autoclose || false,
@@ -52,7 +56,11 @@ export const showSuccessToast = (message: string, autoclose?: number, position?:
   });
 };
 
-export const showErrorToast = (message: string, autoclose?: number, position?: ToastPosition) => {
+export const showErrorToast = (
+  message: string,
+  autoclose?: number,
+  position?: ToastPosition
+) => {
   toast.error(message, {
     position: `${position ? position : "bottom-center"}`,
     autoClose: autoclose || false,
@@ -65,7 +73,11 @@ export const showErrorToast = (message: string, autoclose?: number, position?: T
   });
 };
 
-export const showInfoToast = (message: string, autoclose?: number, position?: ToastPosition) => {
+export const showInfoToast = (
+  message: string,
+  autoclose?: number,
+  position?: ToastPosition
+) => {
   toast.info(message, {
     position: `${position ? position : "bottom-center"}`,
     autoClose: autoclose || false,
@@ -78,7 +90,11 @@ export const showInfoToast = (message: string, autoclose?: number, position?: To
   });
 };
 
-export const showWarningToast = (message: string, autoclose?: number, position?: ToastPosition) => {
+export const showWarningToast = (
+  message: string,
+  autoclose?: number,
+  position?: ToastPosition
+) => {
   toast.warning(message, {
     position: `${position ? position : "bottom-center"}`,
     autoClose: autoclose || false,
@@ -90,3 +106,20 @@ export const showWarningToast = (message: string, autoclose?: number, position?:
     theme: "colored",
   });
 };
+
+export function formatImageUrl(imageUrl: string) {
+  if (imageUrl.startsWith("data:image")) {
+    return imageUrl;
+  }
+  if (imageUrl.includes("jpeg")) {
+    return `data:image/jpeg;base64,${imageUrl}`;
+  }
+  if (imageUrl.includes("jpg")) {
+    return `data:image/jpg;base64,${imageUrl}`;
+  }
+  if (imageUrl.includes("gif")) {
+    return `data:image/gif;base64,${imageUrl}`;
+  }
+
+  return `data:image/jpeg;base64,${imageUrl}`;
+}
