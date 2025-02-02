@@ -4,27 +4,26 @@ on:
   push:
     branches:
       - main
-    directories:
-      - 'frontend'
+    paths:
+      - 'frontend/**'
 
 jobs:
   build-and-deploy-frontend:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: de-vri-es/setup-git-credentials@v2
+        with:
+          credentials: ${{ secrets.GIT_CREDENTIALS }}
 
-      - name: Install dependencies
-        working-directory: frontend
-        run: npm install
-
-      - name: Build
-        working-directory: frontend
-        run: npm run build
-
-      - name: Deploy
-        working-directory: frontend
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Git setup
         run: |
-          git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-          npm run deploy -- -u "github-actions-bot <support+actions@github.com>"
+          git config --global user.email "mateuseap@mateuseap.com"
+          git config --global user.name "Mateus Elias"
+
+      - name: Build & Deploy
+        working-directory: frontend
+        run: |
+          npm install
+          npm run build
+          npm run deploy
