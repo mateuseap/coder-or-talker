@@ -18,6 +18,7 @@ import { showInfoToast } from "./utils";
 
 function App() {
   const [init, setInit] = useState(false);
+  const [toastShow, setToastShow] = useState(false);
 
   useEffect(() => {
     initParticlesEngine(async (engine) => {
@@ -26,10 +27,13 @@ function App() {
       setInit(true);
     });
 
-    showInfoToast(
-      "Great news! We're cooking up more features (like support for X) to make this app even better. Stay tuned! 🚀",
-      6000
-    );
+    if (!toastShow && window.location && window.location.pathname === "/") {
+      showInfoToast(
+        "Great news! We're cooking up more features (like support for X) to make this app even better. Stay tuned! 🚀",
+        6000
+      );
+      setToastShow(true);
+    }
   }, []);
 
   const particlesLoaded = async (container?: Container): Promise<void> => {
