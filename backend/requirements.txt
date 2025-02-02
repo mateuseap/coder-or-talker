@@ -2,5 +2,4 @@ fastapi[standard]
 uvicorn
 httpx
 black
-python-dotenv
 requests
