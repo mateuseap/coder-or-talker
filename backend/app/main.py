@@ -1,7 +1,11 @@
+import os
 import uvicorn
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .api import endpoints
+
+load_dotenv()
 
 app = FastAPI(
     title="Coder or Talker API",
@@ -26,4 +30,5 @@ def hello_world():
 app.include_router(endpoints.router, prefix="/api")
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)
+    port = os.getenv("PORT") or 8000
+    uvicorn.run(app, host="0.0.0.0", port=port, reload=True)
