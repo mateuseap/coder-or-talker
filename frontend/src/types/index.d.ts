@@ -40,8 +40,10 @@ export interface SpinnerProps {
 export interface GitHubVsBlueskyCardProps {
   name: string;
   avatar: string;
+  blueskyUsername: string;
   blueskyFollowersCount: number;
   blueskyPostsCount: number;
+  githubUsername: string;
   githubFollowersCount: number;
   githubCommitsCount: number;
 }
