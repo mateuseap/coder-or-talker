@@ -60,7 +60,7 @@ function Home() {
                   <FaGithub className="text-xl text-gray-700 mr-2" />
                   <input
                     type="text"
-                    placeholder="GitHub Username"
+                    placeholder="username"
                     value={githubUsername}
                     onChange={(e) => setGithubUsername(e.target.value)}
                     required
@@ -71,7 +71,7 @@ function Home() {
                   <SiBluesky className="text-xl text-blue-500 mr-2" />
                   <input
                     type="text"
-                    placeholder="Bluesky Username"
+                    placeholder="username.bsky.social"
                     value={blueskyUsername}
                     onChange={(e) => setBlueskyUsername(e.target.value)}
                     required
