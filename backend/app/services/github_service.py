@@ -1,6 +1,7 @@
 import httpx
 import re
 from fastapi import HTTPException, status
+from bs4 import BeautifulSoup
 
 GITHUB_API_URL = "https://api.github.com"
 
@@ -25,12 +26,12 @@ async def total_commits_fetcher(username: str) -> int:
 
 
 async def fetch_github_readme_stats_data(username: str) -> dict:
-    github_stats_url = f"https://github-readme-stats.vercel.app/api?username={username}&include_all_commits=true"
-    followers_url = f"{GITHUB_API_URL}/users/{username}/followers"
+    github_readme_stats_url = f"https://github-readme-stats.vercel.app/api?username={username}&include_all_commits=true"
+    github_profile_url = f"https://github.com/{username}"
 
     async with httpx.AsyncClient() as client:
         try:
-            stats_response = await client.get(github_stats_url)
+            stats_response = await client.get(github_readme_stats_url)
             stats_response.raise_for_status()
 
             commits_pattern = r"Total Commits\s*:\s*(\d+)"
@@ -43,10 +44,28 @@ async def fetch_github_readme_stats_data(username: str) -> dict:
                     detail="Could not extract total commits.",
                 )
 
-            followers_response = await client.get(followers_url)
-            followers_response.raise_for_status()
-            followers_data = followers_response.json()
-            total_followers = len(followers_data)
+            profile_response = await client.get(github_profile_url)
+            profile_response.raise_for_status()
+
+            soup = BeautifulSoup(profile_response.text, "html.parser")
+            followers_anchor = soup.find(
+                "a", href=f"{github_profile_url}?tab=followers"
+            )
+            if followers_anchor:
+                followers_text = followers_anchor.get_text(strip=True)
+                match = re.search(r"([\d,]+)", followers_text)
+                if match:
+                    total_followers = int(match.group(1).replace(",", ""))
+                else:
+                    raise HTTPException(
+                        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                        detail="Could not extract followers count from the profile page.",
+                    )
+            else:
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail="Could not locate the followers element on the profile page.",
+                )
 
             return {"commits_count": total_commits, "followers": total_followers}
 

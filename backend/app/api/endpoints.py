@@ -15,8 +15,9 @@ async def compare_github_and_bluesky_profiles(github: str, bluesky: str):
     except Exception as e:
         try:
             github_data = await github_service.fetch_github_readme_stats_data(github)
+            github_profile_data = {}
             github_profile_data["followers"] = github_data["followers"]
-            github_commits_count = github_data["total_commits"]
+            github_commits_count = github_data["commits_count"]
         except Exception as fallback_error:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
