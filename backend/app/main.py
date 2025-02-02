@@ -17,6 +17,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+@app.get("/")
+def hello_world():
+    return {"message": "Hello, World!"}
+
+
 app.include_router(endpoints.router, prefix="/api")
 
 if __name__ == "__main__":
