@@ -27,8 +27,10 @@ async def compare_github_and_bluesky_profiles(github: str, bluesky: str):
     return {
         "name": bluesky_profile_data["displayName"],
         "avatar": bluesky_profile_data["avatar"],
-        "blueskyFollowersCount": bluesky_profile_data["followersCount"],
-        "blueskyPostsCount": bluesky_profile_data["postsCount"],
+        "githubUsername": github,
         "githubFollowersCount": github_profile_data["followers"],
         "githubCommitsCount": github_commits_count,
+        "blueskyUsername": "@" + bluesky,
+        "blueskyFollowersCount": bluesky_profile_data["followersCount"],
+        "blueskyPostsCount": bluesky_profile_data["postsCount"],
     }
