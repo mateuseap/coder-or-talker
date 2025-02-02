@@ -11,7 +11,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://www.mateuseap.com/coder-or-talker/"],
+    allow_origins=["https://www.mateuseap.com"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
