@@ -16,7 +16,7 @@ function Home() {
   const { data, isSuccess, isFetching, isError, refetch } =
     useQuery<GitHubVsBlueskyCardProps>({
       queryKey: [
-        `/api/compare-github-and-bluesky-profiles?github=${githubUsername}&bluesky=${blueskyUsername}`,
+        `/api/compare-github-and-bluesky-profiles?github=${githubUsername}&bluesky=${blueskyUsername.replace("@", "")}`,
         "GET",
       ],
       enabled: false,
