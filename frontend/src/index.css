@@ -32,6 +32,6 @@
 
 @layer base {
   html {
-    font-family: Inter;
+    font-family: Inter, system-ui, sans-serif;
   }
 }
